@@ -247,7 +247,7 @@ class sfp_abstractapi(SpiderFootPlugin):
         srcModuleName = event.module
         eventData = event.data
 
-        self.debug(f"Received event, {eventName}, from {srcModuleName}")
+        self.debug(f"Received event, {event.eventType}, from {srcModuleName}")  # noqa: F821
 
         if eventData in self.results:
             self.debug(f"Skipping {eventData}, already checked.")
