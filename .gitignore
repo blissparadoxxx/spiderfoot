@@ -178,3 +178,8 @@ next-steps.md
 azure.yaml
 /infra/app
 /infra
+/codeql-agent-results
+/codeql-custom-queries-python
+/env
+/modules
+modules/sfp_citadel.py
