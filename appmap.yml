@@ -1,0 +1,7 @@
+appmap_dir: tmp\appmap
+language: python
+name: spiderfoot
+packages:
+- path: modules
+- path: test
+- path: spiderfoot
