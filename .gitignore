@@ -1,5 +1,6 @@
 # SpiderFoot specific #
 #######################
+.venv
 /cache/
 /log/
 /spiderfoot.db*

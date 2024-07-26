@@ -457,7 +457,6 @@ def start_scan(sfConfig: dict, sfModules: dict, args, loggingQueue) -> None:
 
     return
 
-
 def start_web_server(sfWebUiConfig: dict, sfConfig: dict, loggingQueue=None) -> None:
     """Start the web server so you can start looking at results
 
@@ -495,38 +494,20 @@ def start_web_server(sfWebUiConfig: dict, sfConfig: dict, loggingQueue=None) -> 
     }
 
     secrets = dict()
-    passwd_file = SpiderFootHelpers.dataPath() + '/passwd'
+    passwd_file = SpiderFootHelpers.dataPath() + 'passwd'
     if os.path.isfile(passwd_file):
         if not os.access(passwd_file, os.R_OK):
             log.error("Could not read passwd file. Permission denied.")
             sys.exit(-1)
 
-        with open(passwd_file, 'r') as f:
-            passwd_data = f.readlines()
-
-        for line in passwd_data:
-            if line.strip() == '':
-                continue
-
-            if ':' not in line:
-                log.error("Incorrect format of passwd file, must be username:password on each line.")
-                sys.exit(-1)
-
-            u = line.strip().split(":")[0]
-            p = ':'.join(line.strip().split(":")[1:])
-
-            if not u or not p:
-                log.error("Incorrect format of passwd file, must be username:password on each line.")
-                sys.exit(-1)
-
-            secrets[u] = p
-
+        secrets = auth_digest.get_ha1_file_htdigest(passwd_file)
+        
     if secrets:
         log.info("Enabling authentication based on supplied passwd file.")
         conf['/'] = {
             'tools.auth_digest.on': True,
             'tools.auth_digest.realm': web_host,
-            'tools.auth_digest.get_ha1': auth_digest.get_ha1_dict_plain(secrets),
+            'tools.auth_digest.get_ha1': secrets,
             'tools.auth_digest.key': random.SystemRandom().randint(0, 99999999)
         }
     else:
